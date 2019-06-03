@@ -17,7 +17,3 @@ console.log('Listening on port:' + PORT);
 app.all('/', function (req, res) {
 	res.render('index.hbs');
 })
-
-app.get('/addLayer', function (req, res) {
-	res.send({mapid, token, computedIds});
-})
