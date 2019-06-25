@@ -90,7 +90,7 @@
                 var parana = new ol.layer.Tile({
                     source: new ol.source.TileWMS({
                     url: url,
-                    params: {'LAYERS': 'cite:pr_setores_censitarios 41SEE250GC_SIR	', 'TILED': true},
+                    params: {'LAYERS': 'cite:pr_setores_censitarios 41SEE250GC_SIR', 'TILED': true},
                     serverType: 'geoserver',
                     transition: 0
                     })
@@ -99,7 +99,7 @@
                 var municipios = new ol.layer.Tile({
                     source: new ol.source.TileWMS({
                     url: url,
-                    params: {'LAYERS': 'cite:pr_municipios 41MUE250GC_SIR	', 'TILED': true},
+                    params: {'LAYERS': 'cite:pr_municipios 41MUE250GC_SIR', 'TILED': true},
                     serverType: 'geoserver',
                     transition: 0
                     })
@@ -108,28 +108,22 @@
                 var distritos = new ol.layer.Tile({
                     source: new ol.source.TileWMS({
                     url: url,
-                    params: {'LAYERS': 'cite:pr_distritos 41DSE250GC_SIR	', 'TILED': true},
+                    params: {'LAYERS': 'cite:pr_distritos 41DSE250GC_SIR', 'TILED': true},
                     serverType: 'geoserver',
                     transition: 0
                     })
                 })
 
-                map.addLayer(parana);
                 map.addLayer(municipios);
                 map.addLayer(distritos);
+                map.addLayer(parana);
                 parana.setVisible(false);
                 municipios.setVisible(false);
                 distritos.setVisible(false);
 
-
                 $('#paranaInput').on('change',function(){
                     if($('#paranaInput').is(':checked')){
                         parana.setVisible(true);
-                        municipios.setVisible(false);
-                        distritos.setVisible(false);
-
-                        $('#municipioInput').prop("checked", false);
-                        $('#distritoInput').prop("checked", false);
                     }else{
                         parana.setVisible(false);
                     }
@@ -137,11 +131,6 @@
                 $('#municipioInput').on('change',function(){
                     if($('#municipioInput').is(':checked')){
                         municipios.setVisible(true);
-                        parana.setVisible(false);
-                        distritos.setVisible(false);
-
-                        $('#paranaInput').prop("checked", false);
-                        $('#distritoInput').prop("checked", false);
                     }else{
                         municipios.setVisible(false);
                     }
@@ -149,11 +138,6 @@
                 $('#distritoInput').on('change',function(){
                     if($('#distritoInput').is(':checked')){
                         distritos.setVisible(true);
-                        municipios.setVisible(false);
-                        parana.setVisible(false);
-
-                        $('#paranaInput').prop("checked", false);
-                        $('#municipioInput').prop("checked", false);
                     }else{
                         distritos.setVisible(false);
                     }
