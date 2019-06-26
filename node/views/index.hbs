@@ -87,61 +87,89 @@
                 var map = initMap();
                 
                 var url = 'http://localhost:1024/geoserver/cite/wms';
-                var parana = new ol.layer.Tile({
+                var edificios = new ol.layer.Tile({
                     source: new ol.source.TileWMS({
                     url: url,
-                    params: {'LAYERS': 'cite:pr_setores_censitarios 41SEE250GC_SIR', 'TILED': true},
+                    params: {'LAYERS': 'cite:edificiosmegavila2', 'TILED': true},
                     serverType: 'geoserver',
                     transition: 0
                     })
                 });
 
-                var municipios = new ol.layer.Tile({
+                var arvores = new ol.layer.Tile({
                     source: new ol.source.TileWMS({
                     url: url,
-                    params: {'LAYERS': 'cite:pr_municipios 41MUE250GC_SIR', 'TILED': true},
-                    serverType: 'geoserver',
-                    transition: 0
-                    })
-                })
-
-                var distritos = new ol.layer.Tile({
-                    source: new ol.source.TileWMS({
-                    url: url,
-                    params: {'LAYERS': 'cite:pr_distritos 41DSE250GC_SIR', 'TILED': true},
+                    params: {'LAYERS': 'cite:arvoresmegavila', 'TILED': true},
                     serverType: 'geoserver',
                     transition: 0
                     })
                 })
 
-                map.addLayer(municipios);
-                map.addLayer(distritos);
-                map.addLayer(parana);
-                parana.setVisible(false);
-                municipios.setVisible(false);
-                distritos.setVisible(false);
+                var ruas = new ol.layer.Tile({
+                    source: new ol.source.TileWMS({
+                    url: url,
+                    params: {'LAYERS': 'cite:ruasmegavila2', 'TILED': true},
+                    serverType: 'geoserver',
+                    transition: 0
+                    })
+                })
 
-                $('#paranaInput').on('change',function(){
-                    if($('#paranaInput').is(':checked')){
-                        parana.setVisible(true);
+                map.addLayer(edificios);
+                map.addLayer(arvores);
+                map.addLayer(ruas);
+                edificios.setVisible(false);
+                arvores.setVisible(false);
+                ruas.setVisible(false);
+
+                $('#edificiosInput').on('change',function(){
+                    if($('#edificiosInput').is(':checked')){
+                        edificios.setVisible(true);
                     }else{
-                        parana.setVisible(false);
+                        edificios.setVisible(false);
                     }
                 });
-                $('#municipioInput').on('change',function(){
-                    if($('#municipioInput').is(':checked')){
-                        municipios.setVisible(true);
+                $('#arvoresInput').on('change',function(){
+                    if($('#arvoresInput').is(':checked')){
+                        arvores.setVisible(true);
                     }else{
-                        municipios.setVisible(false);
+                        arvores.setVisible(false);
                     }
                 });
-                $('#distritoInput').on('change',function(){
-                    if($('#distritoInput').is(':checked')){
-                        distritos.setVisible(true);
+                $('#ruasInput').on('change',function(){
+                    if($('#ruasInput').is(':checked')){
+                        ruas.setVisible(true);
                     }else{
-                        distritos.setVisible(false);
+                        ruas.setVisible(false);
                     }
                 });
+
+                map.on('singleclick', function(evt) {
+                    var view = map.getView();
+                    var viewResolution = view.getResolution();
+
+                    var edificioss = edificios.getSource();
+                    var urled = edificioss.getGetFeatureInfoUrl(
+                        evt.coordinate, viewResolution, view.getProjection(),
+                        {'INFO_FORMAT': 'text/html', 'FEATURE_COUNT': 50}
+                    );
+
+                    var arvoress = arvores.getSource();
+                    var urlarv = arvoress.getGetFeatureInfoUrl(
+                        evt.coordinate, viewResolution, view.getProjection(),
+                        {'INFO_FORMAT': 'text/html', 'FEATURE_COUNT': 50}
+                    );
+
+                    var ruass = ruas.getSource();
+                    var urlrua = ruass.getGetFeatureInfoUrl(
+                        evt.coordinate, viewResolution, view.getProjection(),
+                        {'INFO_FORMAT': 'text/html', 'FEATURE_COUNT': 50}
+                    );
+
+                    document.getElementById('nodelist1').innerHTML = '<iframe seamless width="1000" src="' + urled + '"></iframe>';
+                    document.getElementById('nodelist2').innerHTML = '<iframe seamless width="1000" src="' + urlarv + '"></iframe>';
+                    document.getElementById('nodelist3').innerHTML = '<iframe seamless width="1000" src="' + urlrua + '"></iframe>';
+                });
+                
             });
         </script>
     </head>
@@ -151,26 +179,33 @@
             <div class="row">
                 <div class="col">
                     <label class="switch">
-                        <input type="checkbox" id="municipioInput"><span class="slider round"></span>
+                        <input type="checkbox" id="edificiosInput"><span class="slider round"></span>
                     </label>
-                    Municipio
+                    Edificios Mega Vila
                 </div>
                 <div class="col">
                     <label class="switch">
-                        <input type="checkbox" id="distritoInput"><span class="slider round"></span>
+                        <input type="checkbox" id="arvoresInput"><span class="slider round"></span>
                     </label>
-                    Distrito
+                    Arvores Mega Vila
                 </div>
                 <div class="col">
                     <label class="switch">
-                        <input type="checkbox" id="paranaInput"><span class="slider round"></span>
+                        <input type="checkbox" id="ruasInput"><span class="slider round"></span>
                     </label>
-                    Setores censitarios
+                    Ruas Mega Vila
                 </div>
             </div>
             </div>
         </div>   
         <div id="map"></div>
         <br>
+        <div id="nodelist1">
+            <em>Click on the map to get feature info</em>
+        </div>
+        <div id="nodelist2">
+        </div>
+        <div id="nodelist3">
+        </div>
     </body>
 </html>
